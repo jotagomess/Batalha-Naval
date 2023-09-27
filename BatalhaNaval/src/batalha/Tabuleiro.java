@@ -1,4 +1,3 @@
-
 package batalha;
 
 import java.awt.Color;
