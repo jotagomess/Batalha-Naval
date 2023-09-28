@@ -2,9 +2,12 @@ package batalhanaval;
 
 import batalhanaval.jogadores.Jogador;
 import batalhanaval.jogadores.Maquina;
+import batalhanaval.navios.Navio;
 import java.awt.Color;
 import java.awt.event.KeyEvent;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 /**
  *
@@ -13,17 +16,15 @@ import javax.swing.JPanel;
 public class Tela extends javax.swing.JFrame {
     JPanel paineisH[][];
     JPanel paineisIA[][];
-    Tabuleiro tabuleiro;
     Partida partida;
     
     public Tela() {
         initComponents();
         this.paineisH = new JPanel[5][10];
         this.paineisIA = new JPanel[5][10];
-        
+ 
         Jogador[] jogadores = definirJogadores();
         this.partida = new Partida(jogadores);
-        this.tabuleiro = new Tabuleiro(5,10);
         
         meuInitComponents();
     }
@@ -41,28 +42,34 @@ public class Tela extends javax.swing.JFrame {
         return jogadores;
     }
     
-    public void definirEmbarcacoes(String info) {
+    public boolean definirEmbarcacoes(String info, Navio navio) {
         try {
             int linha;
             int coluna;
 
             if (info.length() == 2) {
-                char letra = info.charAt(0);
-                char digito = info.charAt(1);
+                int letra = info.charAt(0);
+                int digito = info.charAt(1);
 
                 if (letra >= 'A' && letra <= 'E' && digito >= '1' && digito <= '5') {
-                    linha = letra - 'A' + 1; // Converte a letra para um valor de linha (A=1, B=2, etc.)
-                    coluna = digito - '0'; // Converte o dígito para um valor de coluna (1, 2, etc.)
+                    linha = letra - 'A'; // Converte a letra para um valor de linha (A=1, B=2, etc.)
+                    coluna = digito - '0' - 1; // Converte o dígito para um valor de coluna (1, 2, etc.)
+                    
+                    this.partida.defineEmbarcacoes(linha, coluna, navio);
+                    return true;
                 } else {
-
+                    JOptionPane.showMessageDialog(this, "Formato de entrada inválido","Erro na entrada", JOptionPane.ERROR_MESSAGE);
                 }
             } else {
-
+                JOptionPane.showMessageDialog(this, "Informe apenas 2 valores, uma letra e um número","Erro na entrada", JOptionPane.ERROR_MESSAGE);
             }
-
+            
         } catch (NumberFormatException ex) {
-            System.err.println("Erro: " + ex.getMessage());
+            JOptionPane.showMessageDialog(this, "Valor de entrada inválido (Exemplo: 'A3','B2','C4')",
+                    "Erro na entrada", JOptionPane.ERROR_MESSAGE);
         }
+        
+        return false;
     }
     
     @SuppressWarnings("unchecked")
@@ -509,10 +516,10 @@ public class Tela extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(vertical1)
                                 .addGap(0, 0, Short.MAX_VALUE))))
-                    .addGroup(principalLayout.createSequentialGroup()
-                        .addGap(114, 114, 114)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, principalLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel38)
-                        .addContainerGap())))
+                        .addGap(172, 172, 172))))
         );
         principalLayout.setVerticalGroup(
             principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -573,43 +580,21 @@ public class Tela extends javax.swing.JFrame {
                     .addGroup(principalLayout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jPanelIA, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 68, Short.MAX_VALUE)
                 .addGroup(principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, principalLayout.createSequentialGroup()
+                        .addComponent(jLabel29)
+                        .addGap(29, 29, 29)
+                        .addComponent(jLabel30)
+                        .addGap(37, 37, 37)
+                        .addComponent(jLabel31)
+                        .addGap(30, 30, 30)
+                        .addComponent(jLabel32)
+                        .addGap(30, 30, 30)
+                        .addComponent(jLabel34)
+                        .addGap(65, 65, 65))
                     .addGroup(principalLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 67, Short.MAX_VALUE)
-                        .addGroup(principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, principalLayout.createSequentialGroup()
-                                .addGroup(principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jLabel23)
-                                    .addComponent(jLabel22)
-                                    .addComponent(jLabel21)
-                                    .addComponent(jLabel20)
-                                    .addComponent(jLabel19)
-                                    .addComponent(jLabel18)
-                                    .addComponent(jLabel17)
-                                    .addComponent(jLabel16)
-                                    .addComponent(jLabel15)
-                                    .addComponent(jLabel14))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(jPanelH, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(47, 47, 47))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, principalLayout.createSequentialGroup()
-                                .addComponent(jLabel29)
-                                .addGap(29, 29, 29)
-                                .addComponent(jLabel30)
-                                .addGap(37, 37, 37)
-                                .addComponent(jLabel31)
-                                .addGap(30, 30, 30)
-                                .addComponent(jLabel32)
-                                .addGap(30, 30, 30)
-                                .addComponent(jLabel34)
-                                .addGap(65, 65, 65))))
-                    .addGroup(principalLayout.createSequentialGroup()
-                        .addGap(83, 83, 83)
-                        .addGroup(principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel39)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(iniciarBtn1))
-                        .addGap(93, 93, 93)
+                        .addGap(137, 137, 137)
                         .addGroup(principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(acertoIA)
                             .addComponent(jLabel40))
@@ -617,7 +602,27 @@ public class Tela extends javax.swing.JFrame {
                         .addGroup(principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel41, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(acertoP))
-                        .addContainerGap())))
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, principalLayout.createSequentialGroup()
+                        .addGroup(principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel23)
+                            .addComponent(jLabel22)
+                            .addComponent(jLabel21)
+                            .addComponent(jLabel20)
+                            .addComponent(jLabel19)
+                            .addComponent(jLabel18)
+                            .addComponent(jLabel17)
+                            .addComponent(jLabel16)
+                            .addComponent(jLabel15)
+                            .addComponent(jLabel14))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel39)
+                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(iniciarBtn1))
+                            .addComponent(jPanelH, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(47, 47, 47))))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -635,15 +640,15 @@ public class Tela extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void iniciarBtn1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_iniciarBtn1ActionPerformed
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_iniciarBtn1ActionPerformed
 
     private void horizontal2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_horizontal2ActionPerformed
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_horizontal2ActionPerformed
 
     private void horizontal1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_horizontal1ActionPerformed
-        // TODO add your handling code here:
+        
     }//GEN-LAST:event_horizontal1ActionPerformed
 
     private void iniciarBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_iniciarBtnActionPerformed
@@ -653,30 +658,49 @@ public class Tela extends javax.swing.JFrame {
     private void fragataTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_fragataTxtKeyReleased
         if (evt.getKeyChar() == '\n') {
             String infoUser = fragataTxt.getText().trim(); // Remove espaços em branco
-            definirEmbarcacoes(infoUser);
+            Navio fragata = new Navio("Fragata", 3);
+            
+            if(definirEmbarcacoes(infoUser, fragata)) {
+                fragataTxt.setText(infoUser);
+                fragataTxt.setEnabled(false);
+            } else {
+                fragataTxt.setText("");
+                return;
+            }
         }
     }//GEN-LAST:event_fragataTxtKeyReleased
 
     private void cruzadorTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cruzadorTxtKeyReleased
         if (evt.getKeyChar() == '\n') {
             String infoUser = cruzadorTxt.getText().trim(); // Remove espaços em branco
-            definirEmbarcacoes(infoUser);
+            Navio cruzador = new Navio("Fragata", 3);
+            
+            if(definirEmbarcacoes(infoUser, cruzador)) {
+                cruzadorTxt.setText(infoUser);
+                cruzadorTxt.setEnabled(false);
+            } else {
+                cruzadorTxt.setText("");
+                return;
+            }
         }
     }//GEN-LAST:event_cruzadorTxtKeyReleased
 
     private void portaavioesTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_portaavioesTxtKeyReleased
         if (evt.getKeyChar() == '\n') {
             String infoUser = portaavioesTxt.getText().trim(); // Remove espaços em branco
-            definirEmbarcacoes(infoUser);
+            Navio portaavioes = new Navio("Fragata", 3);
+            
+            if(definirEmbarcacoes(infoUser, portaavioes)) {
+                portaavioesTxt.setText(infoUser);
+                portaavioesTxt.setEnabled(false);
+            } else {
+                portaavioesTxt.setText("");
+                return;
+            }
         }
     }//GEN-LAST:event_portaavioesTxtKeyReleased
 
     public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
                 if ("Nimbus".equals(info.getName())) {
@@ -693,22 +717,6 @@ public class Tela extends javax.swing.JFrame {
         } catch (javax.swing.UnsupportedLookAndFeelException ex) {
             java.util.logging.Logger.getLogger(Tela.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
-        //</editor-fold>
 
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {

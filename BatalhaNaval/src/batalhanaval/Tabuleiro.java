@@ -29,5 +29,9 @@ public class Tabuleiro {
     public int getColunas() {
         return this.colunas;
     }
+
+    public void setEmbarcacoes(int linha, int coluna, Navio embarcacao) {
+        this.embarcacoes[linha][coluna] = embarcacao;
+    }
     
 }
