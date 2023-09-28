@@ -47,28 +47,24 @@ public class Tela extends javax.swing.JFrame {
             int linha;
             int coluna;
 
-            if (info.length() == 2) {
-                int letra = info.charAt(0);
-                int digito = info.charAt(1);
+            int letra = info.charAt(0);
+            int digito = Integer.parseInt(info.substring(1));
 
-                if (letra >= 'A' && letra <= 'E' && digito >= '1' && digito <= '5') {
-                    linha = letra - 'A'; // Converte a letra para um valor de linha (A=1, B=2, etc.)
-                    coluna = digito - '0' - 1; // Converte o dígito para um valor de coluna (1, 2, etc.)
-                    
-                    this.partida.defineEmbarcacoes(linha, coluna, navio);
-                    return true;
-                } else {
-                    JOptionPane.showMessageDialog(this, "Formato de entrada inválido","Erro na entrada", JOptionPane.ERROR_MESSAGE);
-                }
+            if (letra >= 'A' && letra <= 'E' && digito >= 1 && digito <= 10) {
+                linha = letra - 'A'; // Converte a letra para um valor de linha (A=1, B=2, etc.)
+                coluna = digito - 1; // Converte o dígito para um valor de coluna (1, 2, etc.)
+
+                System.out.println(linha + " " + coluna);
+                this.partida.defineEmbarcacoes(linha, coluna, navio);
+                return true;
             } else {
-                JOptionPane.showMessageDialog(this, "Informe apenas 2 valores, uma letra e um número","Erro na entrada", JOptionPane.ERROR_MESSAGE);
+                JOptionPane.showMessageDialog(this, "Formato de entrada inválido", "Erro na entrada", JOptionPane.ERROR_MESSAGE);
             }
-            
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(this, "Valor de entrada inválido (Exemplo: 'A3','B2','C4')",
                     "Erro na entrada", JOptionPane.ERROR_MESSAGE);
         }
-        
+
         return false;
     }
     
@@ -284,9 +280,9 @@ public class Tela extends javax.swing.JFrame {
         iniciarBtn.setFont(new java.awt.Font("Segoe UI Semibold", 0, 12)); // NOI18N
         iniciarBtn.setForeground(new java.awt.Color(0, 0, 0));
         iniciarBtn.setText("INICIAR");
-        iniciarBtn.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                iniciarBtnActionPerformed(evt);
+        iniciarBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                iniciarBtnMouseClicked(evt);
             }
         });
 
@@ -517,7 +513,6 @@ public class Tela extends javax.swing.JFrame {
                                 .addComponent(vertical1)
                                 .addGap(0, 0, Short.MAX_VALUE))))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, principalLayout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(jLabel38)
                         .addGap(172, 172, 172))))
         );
@@ -651,10 +646,6 @@ public class Tela extends javax.swing.JFrame {
         
     }//GEN-LAST:event_horizontal1ActionPerformed
 
-    private void iniciarBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_iniciarBtnActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_iniciarBtnActionPerformed
-
     private void fragataTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_fragataTxtKeyReleased
         if (evt.getKeyChar() == '\n') {
             String infoUser = fragataTxt.getText().trim(); // Remove espaços em branco
@@ -699,6 +690,15 @@ public class Tela extends javax.swing.JFrame {
             }
         }
     }//GEN-LAST:event_portaavioesTxtKeyReleased
+
+    private void iniciarBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_iniciarBtnMouseClicked
+        if (fragataTxt.isEnabled() || cruzadorTxt.isEnabled() || portaavioesTxt.isEnabled()) {
+            JOptionPane.showMessageDialog(this, "Você não posicionou todos os navios!",
+                    "Erro na entrada", JOptionPane.ERROR_MESSAGE);
+        } else {
+            iniciarBtn.setEnabled(false);
+        }
+    }//GEN-LAST:event_iniciarBtnMouseClicked
 
     public static void main(String args[]) {
         try {
