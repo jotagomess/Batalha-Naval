@@ -6,38 +6,33 @@ package batalha.navios;
  */
 public class Navio {
     protected String nome; // Nome do navio
-    protected int tamanho; // Tamanho do navio (número de células)
-    protected boolean[] estado; // Estado das células do navio
+    protected int celula; // Tamanho do navio (número de células)
+    protected boolean estado; // Estado das células do navio
 
     // Construtor
-    public Navio(String nome, int tamanho) {
+    public Navio(String nome, int quantCedula) {
         this.nome = nome;
-        this.tamanho = tamanho;
-        this.estado = new boolean[tamanho]; // Inicialmente, todas as células estão intactas
+        this.celula = quantCedula;
+        this.estado = false; //Célula intactada
     }
 
     // Getter para o nome do navio
     public String getNome() {
-        return nome;
+        return this.nome;
     }
 
     // Getter para o tamanho do navio
-    public int getTamanho() {
-        return tamanho;
+    public int getCelula() {
+        return this.celula;
     }
 
     // Getter para o estado de uma célula específica do navio
-    public boolean getCelulaEstado(int indiceCelula) {
-        if (indiceCelula >= 0 && indiceCelula < tamanho) {
-            return estado[indiceCelula];
-        }
-        return false; // Índice de célula inválido
+    public boolean getCelulaEstado() {
+        return this.estado; 
     }
 
     // Setter para o estado de uma célula específica do navio
-    public void setCelulaEstado(int indiceCelula, boolean atingida) {
-        if (indiceCelula >= 0 && indiceCelula < tamanho) {
-            estado[indiceCelula] = atingida;
-        }
+    public void setCelulaEstado() {
+        this.estado = true; //Célula atingida
     }
 }
