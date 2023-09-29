@@ -28,7 +28,7 @@ public class Jogador {
     public void adicionaEmbarcacoes(int linha, int coluna, Navio navio) {
         this.tabuleiro.setEmbarcacoes(linha, coluna,navio);
     }
- 
+    
     public void atirar(int linha, int coluna) {
         
     }

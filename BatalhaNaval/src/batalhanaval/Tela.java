@@ -1,67 +1,62 @@
 package batalhanaval;
 
-import batalhanaval.jogadores.Jogador;
-import batalhanaval.jogadores.Maquina;
 import batalhanaval.navios.Navio;
 import java.awt.Color;
-import java.awt.event.KeyEvent;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTextField;
+import javax.swing.JRadioButton;
 
 /**
  *
  * @author jota_gomes 
  */
 public class Tela extends javax.swing.JFrame {
-    JPanel paineisH[][];
-    JPanel paineisIA[][];
+    JPanel[][] paineisP;
+    JPanel[][] paineisIA;
     Partida partida;
+    boolean orientacao = false;
     
     public Tela() {
         initComponents();
-        this.paineisH = new JPanel[5][10];
+        this.setLocationRelativeTo(null);
+        this.paineisP = new JPanel[5][10];
         this.paineisIA = new JPanel[5][10];
- 
-        Jogador[] jogadores = definirJogadores();
-        this.partida = new Partida(jogadores);
+        this.partida = new Partida();
         
         meuInitComponents();
     }
     
     public void meuInitComponents(){
         criaPaineis();
-    }
-    
-    private Jogador[] definirJogadores() {
-        Jogador[] jogadores = new Jogador[2];
-       
-        jogadores[0] = new Jogador(0);
-        jogadores[1] = new Maquina(1);
         
-        return jogadores;
+        acertoIA.setVisible(false);
+        acertoP.setVisible(false);
     }
-    
-    public boolean definirEmbarcacoes(String info, Navio navio) {
+
+    public boolean definirEmbarcacoes(String info, Navio navio, boolean orientacao) {
         try {
             int linha;
             int coluna;
 
-            int letra = info.charAt(0);
+            char letra = Character.toUpperCase(info.charAt(0));
             int digito = Integer.parseInt(info.substring(1));
 
             if (letra >= 'A' && letra <= 'E' && digito >= 1 && digito <= 10) {
                 linha = letra - 'A'; // Converte a letra para um valor de linha (A=1, B=2, etc.)
                 coluna = digito - 1; // Converte o dígito para um valor de coluna (1, 2, etc.)
-
+                
                 System.out.println(linha + " " + coluna);
                 this.partida.defineEmbarcacoes(linha, coluna, navio);
                 return true;
+
             } else {
                 JOptionPane.showMessageDialog(this, "Formato de entrada inválido", "Erro na entrada", JOptionPane.ERROR_MESSAGE);
             }
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(this, "Valor de entrada inválido (Exemplo: 'A3','B2','C4')",
+                    "Erro na entrada", JOptionPane.ERROR_MESSAGE);
+        } catch (ArrayIndexOutOfBoundsException ex) {
+            JOptionPane.showMessageDialog(this, "O valor informado excede o tabuleiro",
                     "Erro na entrada", JOptionPane.ERROR_MESSAGE);
         }
 
@@ -115,12 +110,12 @@ public class Tela extends javax.swing.JFrame {
         jLabel37 = new javax.swing.JLabel();
         iniciarBtn = new javax.swing.JButton();
         jLabel38 = new javax.swing.JLabel();
-        horizontal1 = new javax.swing.JRadioButton();
-        horizontal2 = new javax.swing.JRadioButton();
-        horizontal3 = new javax.swing.JRadioButton();
-        vertical1 = new javax.swing.JRadioButton();
-        vertical2 = new javax.swing.JRadioButton();
-        vertical3 = new javax.swing.JRadioButton();
+        fragataH = new javax.swing.JRadioButton();
+        cruzadorH = new javax.swing.JRadioButton();
+        portaavioesH = new javax.swing.JRadioButton();
+        fragataV = new javax.swing.JRadioButton();
+        cruzadorV = new javax.swing.JRadioButton();
+        portaavioesV = new javax.swing.JRadioButton();
         jLabel39 = new javax.swing.JLabel();
         jTextField1 = new javax.swing.JTextField();
         iniciarBtn1 = new javax.swing.JButton();
@@ -129,7 +124,8 @@ public class Tela extends javax.swing.JFrame {
         acertoIA = new javax.swing.JLabel();
         acertoP = new javax.swing.JLabel();
         jPanelIA = new javax.swing.JPanel();
-        jPanelH = new javax.swing.JPanel();
+        jPanelP = new javax.swing.JPanel();
+        resetarBtn = new javax.swing.JButton();
 
         jLabel8.setForeground(new java.awt.Color(0, 0, 0));
         jLabel8.setText("7");
@@ -290,41 +286,61 @@ public class Tela extends javax.swing.JFrame {
         jLabel38.setForeground(new java.awt.Color(0, 0, 0));
         jLabel38.setText("Posicão inicial:");
 
-        horizontal1.setBackground(new java.awt.Color(51, 153, 255));
-        horizontal1.setFont(new java.awt.Font("Segoe UI Semibold", 0, 12)); // NOI18N
-        horizontal1.setForeground(new java.awt.Color(0, 0, 0));
-        horizontal1.setText("H");
-        horizontal1.addActionListener(new java.awt.event.ActionListener() {
+        fragataH.setBackground(new java.awt.Color(51, 153, 255));
+        fragataH.setFont(new java.awt.Font("Segoe UI Semibold", 0, 12)); // NOI18N
+        fragataH.setForeground(new java.awt.Color(0, 0, 0));
+        fragataH.setText("H");
+        fragataH.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                horizontal1ActionPerformed(evt);
+                fragataHActionPerformed(evt);
             }
         });
 
-        horizontal2.setFont(new java.awt.Font("Segoe UI Semibold", 0, 12)); // NOI18N
-        horizontal2.setForeground(new java.awt.Color(0, 0, 0));
-        horizontal2.setText("H");
-        horizontal2.addActionListener(new java.awt.event.ActionListener() {
+        cruzadorH.setFont(new java.awt.Font("Segoe UI Semibold", 0, 12)); // NOI18N
+        cruzadorH.setForeground(new java.awt.Color(0, 0, 0));
+        cruzadorH.setText("H");
+        cruzadorH.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                horizontal2ActionPerformed(evt);
+                cruzadorHActionPerformed(evt);
             }
         });
 
-        horizontal3.setBackground(new java.awt.Color(51, 153, 255));
-        horizontal3.setFont(new java.awt.Font("Segoe UI Semibold", 0, 12)); // NOI18N
-        horizontal3.setForeground(new java.awt.Color(0, 0, 0));
-        horizontal3.setText("H");
+        portaavioesH.setBackground(new java.awt.Color(51, 153, 255));
+        portaavioesH.setFont(new java.awt.Font("Segoe UI Semibold", 0, 12)); // NOI18N
+        portaavioesH.setForeground(new java.awt.Color(0, 0, 0));
+        portaavioesH.setText("H");
+        portaavioesH.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                portaavioesHActionPerformed(evt);
+            }
+        });
 
-        vertical1.setFont(new java.awt.Font("Segoe UI Semibold", 0, 12)); // NOI18N
-        vertical1.setForeground(new java.awt.Color(0, 0, 0));
-        vertical1.setText("V");
+        fragataV.setFont(new java.awt.Font("Segoe UI Semibold", 0, 12)); // NOI18N
+        fragataV.setForeground(new java.awt.Color(0, 0, 0));
+        fragataV.setText("V");
+        fragataV.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fragataVActionPerformed(evt);
+            }
+        });
 
-        vertical2.setFont(new java.awt.Font("Segoe UI Semibold", 0, 12)); // NOI18N
-        vertical2.setForeground(new java.awt.Color(0, 0, 0));
-        vertical2.setText("V");
+        cruzadorV.setFont(new java.awt.Font("Segoe UI Semibold", 0, 12)); // NOI18N
+        cruzadorV.setForeground(new java.awt.Color(0, 0, 0));
+        cruzadorV.setText("V");
+        cruzadorV.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cruzadorVActionPerformed(evt);
+            }
+        });
 
-        vertical3.setFont(new java.awt.Font("Segoe UI Semibold", 0, 12)); // NOI18N
-        vertical3.setForeground(new java.awt.Color(0, 0, 0));
-        vertical3.setText("V");
+        portaavioesV.setFont(new java.awt.Font("Segoe UI Semibold", 0, 12)); // NOI18N
+        portaavioesV.setForeground(new java.awt.Color(0, 0, 0));
+        portaavioesV.setText("V");
+        portaavioesV.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                portaavioesVActionPerformed(evt);
+            }
+        });
 
         jLabel39.setBackground(new java.awt.Color(0, 0, 0));
         jLabel39.setFont(new java.awt.Font("Segoe UI", 3, 18)); // NOI18N
@@ -338,11 +354,6 @@ public class Tela extends javax.swing.JFrame {
         iniciarBtn1.setFont(new java.awt.Font("Segoe UI Semibold", 0, 14)); // NOI18N
         iniciarBtn1.setForeground(new java.awt.Color(0, 0, 0));
         iniciarBtn1.setText("ATIRAR!");
-        iniciarBtn1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                iniciarBtn1ActionPerformed(evt);
-            }
-        });
 
         jLabel40.setFont(new java.awt.Font("Segoe UI", 3, 18)); // NOI18N
         jLabel40.setForeground(new java.awt.Color(0, 0, 0));
@@ -373,18 +384,28 @@ public class Tela extends javax.swing.JFrame {
             .addGap(0, 243, Short.MAX_VALUE)
         );
 
-        jPanelH.setBackground(new java.awt.Color(0, 0, 0));
+        jPanelP.setBackground(new java.awt.Color(0, 0, 0));
 
-        javax.swing.GroupLayout jPanelHLayout = new javax.swing.GroupLayout(jPanelH);
-        jPanelH.setLayout(jPanelHLayout);
-        jPanelHLayout.setHorizontalGroup(
-            jPanelHLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        javax.swing.GroupLayout jPanelPLayout = new javax.swing.GroupLayout(jPanelP);
+        jPanelP.setLayout(jPanelPLayout);
+        jPanelPLayout.setHorizontalGroup(
+            jPanelPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 483, Short.MAX_VALUE)
         );
-        jPanelHLayout.setVerticalGroup(
-            jPanelHLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+        jPanelPLayout.setVerticalGroup(
+            jPanelPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 243, Short.MAX_VALUE)
         );
+
+        resetarBtn.setBackground(new java.awt.Color(255, 255, 255));
+        resetarBtn.setFont(new java.awt.Font("Segoe UI Semibold", 0, 12)); // NOI18N
+        resetarBtn.setForeground(new java.awt.Color(0, 0, 0));
+        resetarBtn.setText("RESETAR");
+        resetarBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                resetarBtnMouseClicked(evt);
+            }
+        });
 
         javax.swing.GroupLayout principalLayout = new javax.swing.GroupLayout(principal);
         principal.setLayout(principalLayout);
@@ -453,68 +474,77 @@ public class Tela extends javax.swing.JFrame {
                                                 .addComponent(jLabel30, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                                 .addComponent(jLabel31, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                             .addComponent(jLabel32))
-                                        .addGap(0, 0, Short.MAX_VALUE)))
+                                        .addGap(0, 12, Short.MAX_VALUE)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jPanelH, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jPanelP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(jPanelIA, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addGap(65, 65, 65)))
                 .addGroup(principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(principalLayout.createSequentialGroup()
-                        .addGroup(principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(principalLayout.createSequentialGroup()
-                                    .addComponent(jLabel40)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(acertoIA))
-                                .addGroup(principalLayout.createSequentialGroup()
-                                    .addComponent(jLabel41)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(acertoP))
-                                .addGroup(principalLayout.createSequentialGroup()
-                                    .addGap(2, 2, 2)
-                                    .addComponent(jLabel39)
-                                    .addGap(18, 18, 18)
-                                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(principalLayout.createSequentialGroup()
-                                    .addGroup(principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addGroup(principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                            .addGroup(principalLayout.createSequentialGroup()
-                                                .addComponent(jLabel36)
-                                                .addGap(0, 0, Short.MAX_VALUE))
-                                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, principalLayout.createSequentialGroup()
-                                                .addGap(0, 0, Short.MAX_VALUE)
-                                                .addComponent(jLabel35)))
-                                        .addComponent(jLabel37))
-                                    .addGap(18, 18, 18)
-                                    .addGroup(principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(cruzadorTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(fragataTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(portaavioesTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                            .addComponent(iniciarBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(principalLayout.createSequentialGroup()
+                                .addComponent(jLabel40)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(acertoIA))
+                            .addGroup(principalLayout.createSequentialGroup()
+                                .addComponent(jLabel41)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(acertoP))
+                            .addGroup(principalLayout.createSequentialGroup()
+                                .addGap(2, 2, 2)
+                                .addComponent(jLabel39)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(18, 18, 18)
                         .addGroup(principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(principalLayout.createSequentialGroup()
-                                .addGap(20, 20, 20)
-                                .addGroup(principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(principalLayout.createSequentialGroup()
-                                        .addComponent(horizontal2)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(vertical2))
-                                    .addGroup(principalLayout.createSequentialGroup()
-                                        .addComponent(horizontal3)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(vertical3))
-                                    .addComponent(iniciarBtn1))
-                                .addContainerGap(80, Short.MAX_VALUE))
+                                .addGap(50, 50, 50)
+                                .addComponent(portaavioesV)
+                                .addContainerGap(115, Short.MAX_VALUE))
                             .addGroup(javax.swing.GroupLayout.Alignment.LEADING, principalLayout.createSequentialGroup()
-                                .addGap(18, 18, 18)
-                                .addComponent(horizontal1)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(vertical1)
+                                .addGroup(principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(iniciarBtn1)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, principalLayout.createSequentialGroup()
+                                        .addGap(8, 8, 8)
+                                        .addComponent(fragataH, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(fragataV))
+                                    .addGroup(principalLayout.createSequentialGroup()
+                                        .addGap(50, 50, 50)
+                                        .addComponent(cruzadorV)))
                                 .addGap(0, 0, Short.MAX_VALUE))))
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, principalLayout.createSequentialGroup()
-                        .addComponent(jLabel38)
-                        .addGap(172, 172, 172))))
+                    .addGroup(principalLayout.createSequentialGroup()
+                        .addGroup(principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(principalLayout.createSequentialGroup()
+                                .addGap(124, 124, 124)
+                                .addComponent(jLabel38))
+                            .addGroup(principalLayout.createSequentialGroup()
+                                .addGroup(principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addGroup(principalLayout.createSequentialGroup()
+                                            .addComponent(jLabel36)
+                                            .addGap(0, 0, Short.MAX_VALUE))
+                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, principalLayout.createSequentialGroup()
+                                            .addGap(0, 0, Short.MAX_VALUE)
+                                            .addComponent(jLabel35)))
+                                    .addComponent(jLabel37))
+                                .addGap(18, 18, 18)
+                                .addGroup(principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(portaavioesTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                        .addComponent(fragataTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 74, Short.MAX_VALUE)
+                                        .addComponent(cruzadorTxt)))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(portaavioesH)
+                                    .addComponent(cruzadorH)))
+                            .addGroup(principalLayout.createSequentialGroup()
+                                .addGap(82, 82, 82)
+                                .addComponent(resetarBtn)
+                                .addGap(26, 26, 26)
+                                .addComponent(iniciarBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addContainerGap())))
         );
         principalLayout.setVerticalGroup(
             principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -537,30 +567,33 @@ public class Tela extends javax.swing.JFrame {
                         .addComponent(jLabel13)))
                 .addGroup(principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(principalLayout.createSequentialGroup()
-                        .addGap(36, 36, 36)
+                        .addGap(37, 37, 37)
                         .addComponent(jLabel38)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGap(18, 18, 18)
+                        .addGroup(principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(fragataTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel36)
+                            .addComponent(fragataH)
+                            .addComponent(fragataV))
+                        .addGap(10, 10, 10)
                         .addGroup(principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(principalLayout.createSequentialGroup()
                                 .addGroup(principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(fragataTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(horizontal1)
-                                    .addComponent(vertical1))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(jLabel37)
-                                    .addComponent(horizontal2)
-                                    .addComponent(vertical2)
                                     .addComponent(cruzadorTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGap(10, 10, 10)
                                 .addGroup(principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                     .addComponent(jLabel35)
-                                    .addComponent(horizontal3)
-                                    .addComponent(vertical3)
-                                    .addComponent(portaavioesTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addComponent(jLabel36))
-                        .addGap(68, 68, 68)
-                        .addComponent(iniciarBtn))
+                                    .addComponent(portaavioesTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(portaavioesH)
+                                    .addComponent(portaavioesV)))
+                            .addGroup(principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(cruzadorH)
+                                .addComponent(cruzadorV)))
+                        .addGap(60, 60, 60)
+                        .addGroup(principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(resetarBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(iniciarBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(principalLayout.createSequentialGroup()
                         .addGap(21, 21, 21)
                         .addComponent(jLabel24)
@@ -575,7 +608,7 @@ public class Tela extends javax.swing.JFrame {
                     .addGroup(principalLayout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jPanelIA, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 68, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 65, Short.MAX_VALUE)
                 .addGroup(principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, principalLayout.createSequentialGroup()
                         .addComponent(jLabel29)
@@ -616,7 +649,7 @@ public class Tela extends javax.swing.JFrame {
                                 .addComponent(jLabel39)
                                 .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(iniciarBtn1))
-                            .addComponent(jPanelH, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jPanelP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(47, 47, 47))))
         );
 
@@ -634,59 +667,68 @@ public class Tela extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void iniciarBtn1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_iniciarBtn1ActionPerformed
-        
-    }//GEN-LAST:event_iniciarBtn1ActionPerformed
-
-    private void horizontal2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_horizontal2ActionPerformed
-        
-    }//GEN-LAST:event_horizontal2ActionPerformed
-
-    private void horizontal1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_horizontal1ActionPerformed
-        
-    }//GEN-LAST:event_horizontal1ActionPerformed
-
     private void fragataTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_fragataTxtKeyReleased
         if (evt.getKeyChar() == '\n') {
-            String infoUser = fragataTxt.getText().trim(); // Remove espaços em branco
-            Navio fragata = new Navio("Fragata", 3);
-            
-            if(definirEmbarcacoes(infoUser, fragata)) {
-                fragataTxt.setText(infoUser);
-                fragataTxt.setEnabled(false);
+            if (fragataH.isSelected() || fragataV.isSelected()) {
+                String infoUser = fragataTxt.getText().trim(); // Remove espaços em branco
+                Navio fragata = new Navio("Fragata", 3);
+                orientacao = fragataH.isSelected();
+
+                if (definirEmbarcacoes(infoUser, fragata, orientacao)) {
+                    fragataTxt.setText(infoUser);
+                    fragataTxt.setEnabled(false);
+                    fragataH.setEnabled(false);
+                    fragataV.setEnabled(false);
+                } else {
+                    fragataTxt.setText("");
+                    return;
+                }
             } else {
-                fragataTxt.setText("");
-                return;
+                JOptionPane.showMessageDialog(this, "Selecione uma orientação antes de posicionar a embarcação.", "Erro", JOptionPane.ERROR_MESSAGE);
             }
         }
     }//GEN-LAST:event_fragataTxtKeyReleased
 
     private void cruzadorTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_cruzadorTxtKeyReleased
         if (evt.getKeyChar() == '\n') {
-            String infoUser = cruzadorTxt.getText().trim(); // Remove espaços em branco
-            Navio cruzador = new Navio("Fragata", 3);
-            
-            if(definirEmbarcacoes(infoUser, cruzador)) {
-                cruzadorTxt.setText(infoUser);
-                cruzadorTxt.setEnabled(false);
+            if (cruzadorH.isSelected() || cruzadorV.isSelected()) {
+                String infoUser = cruzadorTxt.getText().trim(); // Remove espaços em branco
+                Navio fragata = new Navio("Fragata", 3);
+                orientacao = cruzadorH.isSelected();
+
+                if (definirEmbarcacoes(infoUser, fragata, orientacao)) {
+                    cruzadorTxt.setText(infoUser);
+                    cruzadorTxt.setEnabled(false);
+                    cruzadorH.setEnabled(false);
+                    cruzadorV.setEnabled(false);
+                } else {
+                    cruzadorTxt.setText("");
+                    return;
+                }
             } else {
-                cruzadorTxt.setText("");
-                return;
+                JOptionPane.showMessageDialog(this, "Selecione uma orientação antes de posicionar a embarcação.", "Erro", JOptionPane.ERROR_MESSAGE);
             }
         }
     }//GEN-LAST:event_cruzadorTxtKeyReleased
 
     private void portaavioesTxtKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_portaavioesTxtKeyReleased
         if (evt.getKeyChar() == '\n') {
-            String infoUser = portaavioesTxt.getText().trim(); // Remove espaços em branco
-            Navio portaavioes = new Navio("Fragata", 3);
-            
-            if(definirEmbarcacoes(infoUser, portaavioes)) {
-                portaavioesTxt.setText(infoUser);
-                portaavioesTxt.setEnabled(false);
+            if (portaavioesH.isSelected() || portaavioesV.isSelected()) {
+                String infoUser = portaavioesTxt.getText().trim(); // Remove espaços em branco
+                Navio fragata = new Navio("Fragata", 3);
+                orientacao = cruzadorH.isSelected();
+
+                if (definirEmbarcacoes(infoUser, fragata, orientacao)) {
+                    portaavioesTxt.setText(infoUser);
+                    portaavioesTxt.setEnabled(false);
+                    portaavioesH.setEnabled(false);
+                    portaavioesV.setEnabled(false);
+                } else {
+                    portaavioesTxt.setText("");
+                    return;
+                }
             } else {
-                portaavioesTxt.setText("");
-                return;
+                JOptionPane.showMessageDialog(this, "Selecione uma orientação antes de posicionar a embarcação.", "Erro", JOptionPane.ERROR_MESSAGE);
             }
         }
     }//GEN-LAST:event_portaavioesTxtKeyReleased
@@ -696,10 +738,56 @@ public class Tela extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Você não posicionou todos os navios!",
                     "Erro na entrada", JOptionPane.ERROR_MESSAGE);
         } else {
-            iniciarBtn.setEnabled(false);
+            iniciarBtn.setVisible(false);
+            resetarBtn.setVisible(false);
+            acertoIA.setVisible(true);
+            acertoP.setVisible(true);
         }
     }//GEN-LAST:event_iniciarBtnMouseClicked
 
+    private void fragataHActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fragataHActionPerformed
+        fragataV.setSelected(false);
+        orientacao = false;
+    }//GEN-LAST:event_fragataHActionPerformed
+
+    private void cruzadorHActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cruzadorHActionPerformed
+        cruzadorV.setSelected(false);
+        orientacao = false;
+    }//GEN-LAST:event_cruzadorHActionPerformed
+
+    private void portaavioesHActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_portaavioesHActionPerformed
+        portaavioesV.setSelected(false);
+        orientacao = false;
+    }//GEN-LAST:event_portaavioesHActionPerformed
+
+    private void fragataVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fragataVActionPerformed
+        fragataH.setSelected(false);
+        orientacao = true;
+    }//GEN-LAST:event_fragataVActionPerformed
+
+    private void cruzadorVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cruzadorVActionPerformed
+        cruzadorH.setSelected(false);
+        orientacao = true;
+    }//GEN-LAST:event_cruzadorVActionPerformed
+
+    private void portaavioesVActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_portaavioesVActionPerformed
+        portaavioesH.setSelected(false);
+        orientacao = true;
+    }//GEN-LAST:event_portaavioesVActionPerformed
+
+    private void resetarBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_resetarBtnMouseClicked
+        int opcao = JOptionPane.showConfirmDialog(this, 
+                "Tem certeza que deseja redefinir suas opções?", "Aviso", JOptionPane.OK_CANCEL_OPTION, JOptionPane.OK_CANCEL_OPTION);
+        if (opcao == JOptionPane.OK_OPTION) {
+            fragataTxt.setText(""); cruzadorTxt.setText(""); portaavioesTxt.setText("");
+            fragataTxt.setEnabled(true); cruzadorTxt.setEnabled(true); portaavioesTxt.setEnabled(true);
+            fragataH.setSelected(false); cruzadorH.setSelected(false); portaavioesH.setSelected(false);
+            fragataV.setSelected(false); cruzadorV.setSelected(false); portaavioesV.setSelected(false);
+            fragataH.setEnabled(true); cruzadorH.setEnabled(true); portaavioesH.setEnabled(true);
+            fragataV.setEnabled(true); cruzadorV.setEnabled(true); portaavioesV.setEnabled(true);
+        }
+    }//GEN-LAST:event_resetarBtnMouseClicked
+     
     public static void main(String args[]) {
         try {
             for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
@@ -756,22 +844,21 @@ public class Tela extends javax.swing.JFrame {
                         larguraPainelPequeno,
                         alturaPainelPequeno);
                 
-                jPanelH.add(painelPequenoH); // Adiciona ao painel do Player         
-                paineisH[i][j] = painelPequenoH; // Adiciona o painel à matriz da Player
+                jPanelP.add(painelPequenoH); // Adiciona ao painel do Player         
+                paineisP[i][j] = painelPequenoH; // Adiciona o painel à matriz da Player
             }
         }
     }
     
-    
-    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel acertoIA;
     private javax.swing.JLabel acertoP;
+    private javax.swing.JRadioButton cruzadorH;
     private javax.swing.JTextField cruzadorTxt;
+    private javax.swing.JRadioButton cruzadorV;
+    private javax.swing.JRadioButton fragataH;
     private javax.swing.JTextField fragataTxt;
-    private javax.swing.JRadioButton horizontal1;
-    private javax.swing.JRadioButton horizontal2;
-    private javax.swing.JRadioButton horizontal3;
+    private javax.swing.JRadioButton fragataV;
     private javax.swing.JButton iniciarBtn;
     private javax.swing.JButton iniciarBtn1;
     private javax.swing.JLabel jLabel1;
@@ -815,13 +902,13 @@ public class Tela extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
-    private javax.swing.JPanel jPanelH;
     private javax.swing.JPanel jPanelIA;
+    private javax.swing.JPanel jPanelP;
     private javax.swing.JTextField jTextField1;
+    private javax.swing.JRadioButton portaavioesH;
     private javax.swing.JTextField portaavioesTxt;
+    private javax.swing.JRadioButton portaavioesV;
     private javax.swing.JPanel principal;
-    private javax.swing.JRadioButton vertical1;
-    private javax.swing.JRadioButton vertical2;
-    private javax.swing.JRadioButton vertical3;
+    private javax.swing.JButton resetarBtn;
     // End of variables declaration//GEN-END:variables
 }
