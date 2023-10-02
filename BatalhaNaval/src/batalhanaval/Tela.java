@@ -13,8 +13,10 @@ import javax.swing.JRadioButton;
 public class Tela extends javax.swing.JFrame {
     JPanel[][] paineisP;
     JPanel[][] paineisIA;
+    
+    
     Partida partida;
-    boolean orientacao = false;
+    boolean orientacao;
     
     public Tela() {
         initComponents();
@@ -45,20 +47,17 @@ public class Tela extends javax.swing.JFrame {
                 linha = letra - 'A'; // Converte a letra para um valor de linha (A=1, B=2, etc.)
                 coluna = digito - 1; // Converte o dígito para um valor de coluna (1, 2, etc.)
                 
-                System.out.println(linha + " " + coluna);
-                this.partida.defineEmbarcacoes(linha, coluna, navio);
-                return true;
-
+                if (this.partida.defineEmbarcacoes(linha, coluna, navio, orientacao)) {
+                    return true;
+                } 
+                return false;
             } else {
                 JOptionPane.showMessageDialog(this, "Formato de entrada inválido", "Erro na entrada", JOptionPane.ERROR_MESSAGE);
             }
         } catch (NumberFormatException ex) {
             JOptionPane.showMessageDialog(this, "Valor de entrada inválido (Exemplo: 'A3','B2','C4')",
                     "Erro na entrada", JOptionPane.ERROR_MESSAGE);
-        } catch (ArrayIndexOutOfBoundsException ex) {
-            JOptionPane.showMessageDialog(this, "O valor informado excede o tabuleiro",
-                    "Erro na entrada", JOptionPane.ERROR_MESSAGE);
-        }
+        } 
 
         return false;
     }
@@ -125,7 +124,6 @@ public class Tela extends javax.swing.JFrame {
         acertoP = new javax.swing.JLabel();
         jPanelIA = new javax.swing.JPanel();
         jPanelP = new javax.swing.JPanel();
-        resetarBtn = new javax.swing.JButton();
 
         jLabel8.setForeground(new java.awt.Color(0, 0, 0));
         jLabel8.setText("7");
@@ -397,16 +395,6 @@ public class Tela extends javax.swing.JFrame {
             .addGap(0, 243, Short.MAX_VALUE)
         );
 
-        resetarBtn.setBackground(new java.awt.Color(255, 255, 255));
-        resetarBtn.setFont(new java.awt.Font("Segoe UI Semibold", 0, 12)); // NOI18N
-        resetarBtn.setForeground(new java.awt.Color(0, 0, 0));
-        resetarBtn.setText("RESETAR");
-        resetarBtn.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                resetarBtnMouseClicked(evt);
-            }
-        });
-
         javax.swing.GroupLayout principalLayout = new javax.swing.GroupLayout(principal);
         principal.setLayout(principalLayout);
         principalLayout.setHorizontalGroup(
@@ -415,48 +403,49 @@ public class Tela extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(principalLayout.createSequentialGroup()
-                        .addGap(35, 35, 35)
+                        .addGap(47, 47, 47)
                         .addComponent(jLabel23, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(33, 33, 33)
+                        .addGap(28, 28, 28)
                         .addComponent(jLabel22, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(34, 34, 34)
-                        .addComponent(jLabel21, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(35, 35, 35)
-                        .addComponent(jLabel20, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(35, 35, 35)
-                        .addComponent(jLabel19, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(33, 33, 33)
-                        .addComponent(jLabel18, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(34, 34, 34)
-                        .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(32, 32, 32)
-                        .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(29, 29, 29)
-                        .addComponent(jLabel15)
+                        .addComponent(jLabel21, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(34, 34, 34)
+                        .addComponent(jLabel20, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(38, 38, 38)
-                        .addComponent(jLabel14))
+                        .addComponent(jLabel19, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(32, 32, 32)
+                        .addComponent(jLabel18, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(33, 33, 33)
+                        .addComponent(jLabel17, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(34, 34, 34)
+                        .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(31, 31, 31)
+                        .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(33, 33, 33)
+                        .addComponent(jLabel14)
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, principalLayout.createSequentialGroup()
                         .addGroup(principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(principalLayout.createSequentialGroup()
-                                .addGap(35, 35, 35)
+                                .addGap(49, 49, 49)
                                 .addComponent(jLabel1)
-                                .addGap(39, 39, 39)
+                                .addGap(35, 35, 35)
                                 .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(35, 35, 35)
-                                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(35, 35, 35)
-                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(29, 29, 29)
-                                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(34, 34, 34)
-                                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(33, 33, 33)
+                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(31, 31, 31)
+                                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(30, 30, 30)
+                                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(28, 28, 28)
                                 .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(30, 30, 30)
                                 .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(36, 36, 36)
                                 .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(26, 26, 26)
+                                .addGap(29, 29, 29)
                                 .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(0, 0, Short.MAX_VALUE))
                             .addGroup(principalLayout.createSequentialGroup()
@@ -530,21 +519,19 @@ public class Tela extends javax.swing.JFrame {
                                             .addComponent(jLabel35)))
                                     .addComponent(jLabel37))
                                 .addGap(18, 18, 18)
-                                .addGroup(principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(portaavioesTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                        .addComponent(fragataTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 74, Short.MAX_VALUE)
-                                        .addComponent(cruzadorTxt)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(portaavioesH)
-                                    .addComponent(cruzadorH)))
-                            .addGroup(principalLayout.createSequentialGroup()
-                                .addGap(82, 82, 82)
-                                .addComponent(resetarBtn)
-                                .addGap(26, 26, 26)
-                                .addComponent(iniciarBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addContainerGap())))
+                                    .addComponent(iniciarBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(principalLayout.createSequentialGroup()
+                                        .addGroup(principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(portaavioesTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                                .addComponent(fragataTxt, javax.swing.GroupLayout.DEFAULT_SIZE, 74, Short.MAX_VALUE)
+                                                .addComponent(cruzadorTxt)))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(portaavioesH)
+                                            .addComponent(cruzadorH))))))
+                        .addContainerGap(156, Short.MAX_VALUE))))
         );
         principalLayout.setVerticalGroup(
             principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -552,20 +539,18 @@ public class Tela extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jLabel6)
-                                .addComponent(jLabel7)
-                                .addComponent(jLabel3)
-                                .addComponent(jLabel4)
-                                .addComponent(jLabel2)
-                                .addComponent(jLabel9)))
+                        .addComponent(jLabel2, javax.swing.GroupLayout.Alignment.TRAILING)
                         .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel12)
-                        .addComponent(jLabel13)))
-                .addGroup(principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jLabel13)
+                        .addComponent(jLabel9)
+                        .addComponent(jLabel7)
+                        .addComponent(jLabel6)
+                        .addComponent(jLabel5)
+                        .addComponent(jLabel4)
+                        .addComponent(jLabel3)))
+                .addGroup(principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(principalLayout.createSequentialGroup()
                         .addGap(37, 37, 37)
                         .addComponent(jLabel38)
@@ -590,10 +575,8 @@ public class Tela extends javax.swing.JFrame {
                             .addGroup(principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(cruzadorH)
                                 .addComponent(cruzadorV)))
-                        .addGap(60, 60, 60)
-                        .addGroup(principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(resetarBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(iniciarBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(iniciarBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(principalLayout.createSequentialGroup()
                         .addGap(21, 21, 21)
                         .addComponent(jLabel24)
@@ -608,7 +591,7 @@ public class Tela extends javax.swing.JFrame {
                     .addGroup(principalLayout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jPanelIA, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 65, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 68, Short.MAX_VALUE)
                 .addGroup(principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, principalLayout.createSequentialGroup()
                         .addComponent(jLabel29)
@@ -643,14 +626,14 @@ public class Tela extends javax.swing.JFrame {
                             .addComponent(jLabel16)
                             .addComponent(jLabel15)
                             .addComponent(jLabel14))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(jLabel39)
                                 .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(iniciarBtn1))
                             .addComponent(jPanelP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addGap(47, 47, 47))))
+                        .addGap(53, 53, 53))))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -672,7 +655,7 @@ public class Tela extends javax.swing.JFrame {
             if (fragataH.isSelected() || fragataV.isSelected()) {
                 String infoUser = fragataTxt.getText().trim(); // Remove espaços em branco
                 Navio fragata = new Navio("Fragata", 3);
-                orientacao = fragataH.isSelected();
+                orientacao = fragataV.isSelected();
 
                 if (definirEmbarcacoes(infoUser, fragata, orientacao)) {
                     fragataTxt.setText(infoUser);
@@ -693,10 +676,10 @@ public class Tela extends javax.swing.JFrame {
         if (evt.getKeyChar() == '\n') {
             if (cruzadorH.isSelected() || cruzadorV.isSelected()) {
                 String infoUser = cruzadorTxt.getText().trim(); // Remove espaços em branco
-                Navio fragata = new Navio("Fragata", 3);
-                orientacao = cruzadorH.isSelected();
+                Navio cruzador = new Navio("Cruzador", 2);
+                orientacao = cruzadorV.isSelected();
 
-                if (definirEmbarcacoes(infoUser, fragata, orientacao)) {
+                if (definirEmbarcacoes(infoUser, cruzador, orientacao)) {
                     cruzadorTxt.setText(infoUser);
                     cruzadorTxt.setEnabled(false);
                     cruzadorH.setEnabled(false);
@@ -715,10 +698,10 @@ public class Tela extends javax.swing.JFrame {
         if (evt.getKeyChar() == '\n') {
             if (portaavioesH.isSelected() || portaavioesV.isSelected()) {
                 String infoUser = portaavioesTxt.getText().trim(); // Remove espaços em branco
-                Navio fragata = new Navio("Fragata", 3);
-                orientacao = cruzadorH.isSelected();
+                Navio portaavioes = new Navio("Porta-aviões", 4);
+                orientacao = portaavioesV.isSelected();
 
-                if (definirEmbarcacoes(infoUser, fragata, orientacao)) {
+                if (definirEmbarcacoes(infoUser, portaavioes, orientacao)) {
                     portaavioesTxt.setText(infoUser);
                     portaavioesTxt.setEnabled(false);
                     portaavioesH.setEnabled(false);
@@ -739,7 +722,6 @@ public class Tela extends javax.swing.JFrame {
                     "Erro na entrada", JOptionPane.ERROR_MESSAGE);
         } else {
             iniciarBtn.setVisible(false);
-            resetarBtn.setVisible(false);
             acertoIA.setVisible(true);
             acertoP.setVisible(true);
         }
@@ -774,19 +756,6 @@ public class Tela extends javax.swing.JFrame {
         portaavioesH.setSelected(false);
         orientacao = true;
     }//GEN-LAST:event_portaavioesVActionPerformed
-
-    private void resetarBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_resetarBtnMouseClicked
-        int opcao = JOptionPane.showConfirmDialog(this, 
-                "Tem certeza que deseja redefinir suas opções?", "Aviso", JOptionPane.OK_CANCEL_OPTION, JOptionPane.OK_CANCEL_OPTION);
-        if (opcao == JOptionPane.OK_OPTION) {
-            fragataTxt.setText(""); cruzadorTxt.setText(""); portaavioesTxt.setText("");
-            fragataTxt.setEnabled(true); cruzadorTxt.setEnabled(true); portaavioesTxt.setEnabled(true);
-            fragataH.setSelected(false); cruzadorH.setSelected(false); portaavioesH.setSelected(false);
-            fragataV.setSelected(false); cruzadorV.setSelected(false); portaavioesV.setSelected(false);
-            fragataH.setEnabled(true); cruzadorH.setEnabled(true); portaavioesH.setEnabled(true);
-            fragataV.setEnabled(true); cruzadorV.setEnabled(true); portaavioesV.setEnabled(true);
-        }
-    }//GEN-LAST:event_resetarBtnMouseClicked
      
     public static void main(String args[]) {
         try {
@@ -909,6 +878,5 @@ public class Tela extends javax.swing.JFrame {
     private javax.swing.JTextField portaavioesTxt;
     private javax.swing.JRadioButton portaavioesV;
     private javax.swing.JPanel principal;
-    private javax.swing.JButton resetarBtn;
     // End of variables declaration//GEN-END:variables
 }

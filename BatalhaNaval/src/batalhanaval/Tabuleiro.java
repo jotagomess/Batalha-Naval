@@ -9,29 +9,17 @@ import batalhanaval.navios.Navio;
 public class Tabuleiro {
     
     private Navio embarcacoes[][];
-    private int linhas;
-    private int colunas; 
     
-    public Tabuleiro(int linhas, int colunas) {
-        this.linhas = linhas;
-        this.colunas = colunas;
-        this.embarcacoes = new Navio[linhas][colunas];
+    public Tabuleiro() {
+        this.embarcacoes = new Navio[5][10];
     }
 
     public Navio getEmbarcacoes(int linha, int coluna) {
         return this.embarcacoes[linha][coluna];
     }
 
-    public int getLinhas() {
-        return this.linhas;
-    }
-
-    public int getColunas() {
-        return this.colunas;
-    }
-
-    public void setEmbarcacoes(int linha, int coluna, Navio embarcacao) {
-        this.embarcacoes[linha][coluna] = embarcacao;
+    public void setEmbarcacoes(Navio[][] embarcacoes) {
+        this.embarcacoes = embarcacoes;
     }
     
 }

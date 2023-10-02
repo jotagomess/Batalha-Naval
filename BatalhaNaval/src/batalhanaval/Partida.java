@@ -4,6 +4,7 @@ import batalhanaval.jogadores.Jogador;
 import batalhanaval.jogadores.Maquina;
 import batalhanaval.navios.Navio;
 import java.util.Random;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -11,28 +12,27 @@ import java.util.Random;
  */
 public class Partida {
     
-    private Jogador[] jogadores;
+    private Jogador jogador;
+    private Tabuleiro tabuleiro;
+    private Maquina maquina;
     private Random r;
     private int rodada;
     private int vez;
     
     public Partida() {
-        Jogador[] jogadores = new Jogador[2];
-       
-        jogadores[0] = new Jogador(0);
-        jogadores[1] = new Maquina(1);
-        
-        this.jogadores = jogadores;
+        this.maquina = new Maquina();
+        this.tabuleiro = new Tabuleiro();
+        this.jogador = new Jogador();
         this.r = new Random();
     }
     
-    public void defineEmbarcacoes(int linha, int coluna, Navio navio) {
-        this.jogadores[0].adicionaEmbarcacoes(linha, coluna, navio);
+    public boolean defineEmbarcacoes(int linha, int coluna, Navio navio, boolean orientacao) {
+        if (jogador.adicionaEmbarcacoes(linha, coluna, navio, orientacao)) {
+            maquina.adicionaEmbarcacoes(navio);      
+            return true;
+        } 
         
-        linha = r.nextInt(1, 6);
-        coluna = r.nextInt(1, 10);
-        
-        this.jogadores[1].adicionaEmbarcacoes(linha, coluna, navio);
+        return false;
     }
-    
+
 }
