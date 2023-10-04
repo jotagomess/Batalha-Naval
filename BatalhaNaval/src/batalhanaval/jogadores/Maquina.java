@@ -7,10 +7,12 @@ import java.util.Random;
 public class Maquina {
 
     private Navio[][] embarcacoes;
+    private boolean[][] jogadas;
     private Random random;
 
     public Maquina() {
         this.embarcacoes = new Navio[5][10];
+        this.jogadas = new boolean[5][10];
         random = new Random();
     }
 
@@ -96,5 +98,33 @@ public class Maquina {
     
     public Navio[][] getEmbarcacoes() {
         return embarcacoes;
+    }
+
+    public boolean recebeTiro(int linha, int coluna) {
+        if (this.embarcacoes[linha][coluna] != null) {
+
+            this.embarcacoes[linha][coluna] = null;
+            return true; //Navio atingido
+        } else {
+            return false; //Água atingida
+        }
+    }
+    
+    public boolean realizaTiro(int linha, int coluna, Jogador jogador) {
+        while (linha < 0 || linha >= 5 || coluna < 0 || coluna >= 10) {
+            // Posição fora dos limites do tabuleiro
+            // Sorteie novas coordenadas válidas
+            linha = random.nextInt(5);
+            coluna = random.nextInt(10);
+        }
+        
+        if (jogadas[linha][coluna]) {
+            linha = random.nextInt(5);
+            coluna = random.nextInt(10);
+            realizaTiro(linha, coluna, jogador);
+        }
+        
+        jogadas[linha][coluna] = true;
+        return jogador.recebeTiro(linha, coluna);
     }
 }

@@ -2,9 +2,9 @@ package batalhanaval;
 
 import batalhanaval.navios.Navio;
 import java.awt.Color;
+import java.util.Random;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 
 /**
  *
@@ -13,10 +13,13 @@ import javax.swing.JRadioButton;
 public class Tela extends javax.swing.JFrame {
     JPanel[][] paineisP;
     JPanel[][] paineisIA;
-    
-    
     Partida partida;
+    Random r;
+    
     boolean orientacao;
+    int acertosIA = 0;
+    int acertosP = 0;
+    String tiro;
     
     public Tela() {
         initComponents();
@@ -24,6 +27,7 @@ public class Tela extends javax.swing.JFrame {
         this.paineisP = new JPanel[5][10];
         this.paineisIA = new JPanel[5][10];
         this.partida = new Partida();
+        this.r = new Random();
         
         meuInitComponents();
     }
@@ -60,6 +64,118 @@ public class Tela extends javax.swing.JFrame {
         } 
 
         return false;
+    }
+
+    private boolean definirTiro(String info) {
+        try {
+            int linhaP;
+            int colunaP;
+
+            char letra = Character.toUpperCase(info.charAt(0));
+            int digito = Integer.parseInt(info.substring(1));
+
+            if (letra >= 'A' && letra <= 'E' && digito >= 1 && digito <= 10) {
+                linhaP = letra - 'A'; // Converte a letra para um valor de linha (A=1, B=2, etc.)
+                colunaP = digito - 1; // Converte o dígito para um valor de coluna (1, 2, etc.)
+                
+                int linhaIA = r.nextInt(5);
+                int colunaIA = r.nextInt(10);
+                
+                int resultado = partida.realizaRodada(linhaP, colunaP, linhaIA, colunaIA);
+                
+                if (resultado != 0) {
+                    atualizaInterface(resultado, linhaP, colunaP, linhaIA, colunaIA);
+                    return true;
+                    
+                } else {
+                    return false;
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Valor de entrada inválido", "Erro na entrada", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "Formato de entrada inválido (Exemplo: 'A3','B2','C4')",
+                    "Erro na entrada", JOptionPane.ERROR_MESSAGE);
+        }
+        
+        return false;
+    }
+    
+    private void atualizaInterface(int resultado, int linhaP, int colunaP, int linhaIA, int colunaIA) {
+        
+        switch (resultado) {
+            case 1:
+                paineisIA[linhaP][colunaP].setBackground(Color.RED);
+                paineisP[linhaIA][colunaIA].setBackground(Color.CYAN);
+                acertosP++;
+                acertoP.setText(acertosP+"");
+                JOptionPane.showMessageDialog(this, "Você acertou!");
+                break;
+            case 2:
+                paineisIA[linhaP][colunaP].setBackground(Color.CYAN);
+                paineisP[linhaIA][colunaIA].setBackground(Color.RED);
+                acertosIA++;
+                acertoIA.setText(acertosIA+"");
+                break;
+            case 3:
+                paineisIA[linhaP][colunaP].setBackground(Color.RED);
+                paineisP[linhaIA][colunaIA].setBackground(Color.RED);
+                acertosP++;
+                acertoP.setText(acertosP+"");
+                
+                acertosIA++;
+                acertoIA.setText(acertosIA+"");
+                JOptionPane.showMessageDialog(this, "Você acertou!");
+                break;
+            case 4:
+                paineisIA[linhaP][colunaP].setBackground(Color.CYAN);
+                paineisP[linhaIA][colunaIA].setBackground(Color.CYAN);
+                break;
+        }
+        
+        if (jogadorVenceu()) {
+            JOptionPane.showMessageDialog(this, "Parabéns! Você venceu!", "Vitória!", JOptionPane.INFORMATION_MESSAGE);
+            System.exit(0);
+        }
+        
+        if(maquinaVenceu()) {
+            JOptionPane.showMessageDialog(this, "Infelizmente você perdeu :(", "Derrota!", JOptionPane.INFORMATION_MESSAGE);
+            System.exit(0);
+        }
+    }
+    
+    private boolean jogadorVenceu() {
+        int naviosAbatidos = 0;
+
+        // Verifica todos os painéis do jogador
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 10; j++) {
+                // Verifica se o painel está vermelho (navio abatido)
+                if (paineisIA[i][j].getBackground() == Color.RED) {
+                    naviosAbatidos++;
+                }
+            }
+        }
+
+        // Se 9 navios foram abatidos, o jogador venceu
+        return naviosAbatidos >= 9;
+    }
+    
+    private boolean maquinaVenceu() {
+        int naviosAbatidos = 0;
+
+        // Verifica todos os painéis da maquina
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 10; j++) {
+                // Verifica se o painel está vermelho (navio abatido)
+                if (paineisP[i][j].getBackground() == Color.RED) {
+                    naviosAbatidos++;
+                }
+            }
+        }
+
+        // Se 9 navios foram abatidos, a máquina venceu
+        return naviosAbatidos >= 9;
     }
     
     @SuppressWarnings("unchecked")
@@ -116,14 +232,14 @@ public class Tela extends javax.swing.JFrame {
         cruzadorV = new javax.swing.JRadioButton();
         portaavioesV = new javax.swing.JRadioButton();
         jLabel39 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        iniciarBtn1 = new javax.swing.JButton();
+        atirarTxt = new javax.swing.JTextField();
+        atirarBtn = new javax.swing.JButton();
         jLabel40 = new javax.swing.JLabel();
         jLabel41 = new javax.swing.JLabel();
         acertoIA = new javax.swing.JLabel();
         acertoP = new javax.swing.JLabel();
-        jPanelIA = new javax.swing.JPanel();
         jPanelP = new javax.swing.JPanel();
+        jPanelIA = new javax.swing.JPanel();
 
         jLabel8.setForeground(new java.awt.Color(0, 0, 0));
         jLabel8.setText("7");
@@ -139,7 +255,7 @@ public class Tela extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        principal.setBackground(new java.awt.Color(51, 153, 255));
+        principal.setBackground(new java.awt.Color(153, 153, 153));
         principal.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         principal.setToolTipText("");
 
@@ -284,7 +400,7 @@ public class Tela extends javax.swing.JFrame {
         jLabel38.setForeground(new java.awt.Color(0, 0, 0));
         jLabel38.setText("Posicão inicial:");
 
-        fragataH.setBackground(new java.awt.Color(51, 153, 255));
+        fragataH.setBackground(new java.awt.Color(153, 153, 153));
         fragataH.setFont(new java.awt.Font("Segoe UI Semibold", 0, 12)); // NOI18N
         fragataH.setForeground(new java.awt.Color(0, 0, 0));
         fragataH.setText("H");
@@ -303,7 +419,7 @@ public class Tela extends javax.swing.JFrame {
             }
         });
 
-        portaavioesH.setBackground(new java.awt.Color(51, 153, 255));
+        portaavioesH.setBackground(new java.awt.Color(153, 153, 153));
         portaavioesH.setFont(new java.awt.Font("Segoe UI Semibold", 0, 12)); // NOI18N
         portaavioesH.setForeground(new java.awt.Color(0, 0, 0));
         portaavioesH.setText("H");
@@ -345,13 +461,18 @@ public class Tela extends javax.swing.JFrame {
         jLabel39.setForeground(new java.awt.Color(0, 0, 0));
         jLabel39.setText("Disparo em:");
 
-        jTextField1.setBackground(new java.awt.Color(255, 255, 255));
-        jTextField1.setForeground(new java.awt.Color(0, 0, 0));
+        atirarTxt.setBackground(new java.awt.Color(255, 255, 255));
+        atirarTxt.setForeground(new java.awt.Color(0, 0, 0));
 
-        iniciarBtn1.setBackground(new java.awt.Color(255, 255, 255));
-        iniciarBtn1.setFont(new java.awt.Font("Segoe UI Semibold", 0, 14)); // NOI18N
-        iniciarBtn1.setForeground(new java.awt.Color(0, 0, 0));
-        iniciarBtn1.setText("ATIRAR!");
+        atirarBtn.setBackground(new java.awt.Color(255, 255, 255));
+        atirarBtn.setFont(new java.awt.Font("Segoe UI Semibold", 0, 14)); // NOI18N
+        atirarBtn.setForeground(new java.awt.Color(0, 0, 0));
+        atirarBtn.setText("ATIRAR!");
+        atirarBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                atirarBtnMouseClicked(evt);
+            }
+        });
 
         jLabel40.setFont(new java.awt.Font("Segoe UI", 3, 18)); // NOI18N
         jLabel40.setForeground(new java.awt.Color(0, 0, 0));
@@ -369,19 +490,6 @@ public class Tela extends javax.swing.JFrame {
         acertoP.setForeground(new java.awt.Color(0, 0, 0));
         acertoP.setText("0");
 
-        jPanelIA.setBackground(new java.awt.Color(0, 0, 0));
-
-        javax.swing.GroupLayout jPanelIALayout = new javax.swing.GroupLayout(jPanelIA);
-        jPanelIA.setLayout(jPanelIALayout);
-        jPanelIALayout.setHorizontalGroup(
-            jPanelIALayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 483, Short.MAX_VALUE)
-        );
-        jPanelIALayout.setVerticalGroup(
-            jPanelIALayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 243, Short.MAX_VALUE)
-        );
-
         jPanelP.setBackground(new java.awt.Color(0, 0, 0));
 
         javax.swing.GroupLayout jPanelPLayout = new javax.swing.GroupLayout(jPanelP);
@@ -392,6 +500,19 @@ public class Tela extends javax.swing.JFrame {
         );
         jPanelPLayout.setVerticalGroup(
             jPanelPLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 243, Short.MAX_VALUE)
+        );
+
+        jPanelIA.setBackground(new java.awt.Color(0, 0, 0));
+
+        javax.swing.GroupLayout jPanelIALayout = new javax.swing.GroupLayout(jPanelIA);
+        jPanelIA.setLayout(jPanelIALayout);
+        jPanelIALayout.setHorizontalGroup(
+            jPanelIALayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 483, Short.MAX_VALUE)
+        );
+        jPanelIALayout.setVerticalGroup(
+            jPanelIALayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGap(0, 243, Short.MAX_VALUE)
         );
 
@@ -437,17 +558,16 @@ public class Tela extends javax.swing.JFrame {
                                 .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(31, 31, 31)
                                 .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(30, 30, 30)
+                                .addGap(34, 34, 34)
                                 .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(28, 28, 28)
+                                .addGap(32, 32, 32)
                                 .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(30, 30, 30)
+                                .addGap(35, 35, 35)
                                 .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 14, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(36, 36, 36)
+                                .addGap(35, 35, 35)
                                 .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 17, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(29, 29, 29)
-                                .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(0, 0, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(principalLayout.createSequentialGroup()
                                 .addGroup(principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel34, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -466,12 +586,12 @@ public class Tela extends javax.swing.JFrame {
                                         .addGap(0, 12, Short.MAX_VALUE)))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(jPanelP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jPanelIA, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                    .addComponent(jPanelIA, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jPanelP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addGap(65, 65, 65)))
                 .addGroup(principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(principalLayout.createSequentialGroup()
-                        .addGroup(principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(principalLayout.createSequentialGroup()
                                 .addComponent(jLabel40)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -483,26 +603,18 @@ public class Tela extends javax.swing.JFrame {
                             .addGroup(principalLayout.createSequentialGroup()
                                 .addGap(2, 2, 2)
                                 .addComponent(jLabel39)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(18, 18, 18)
-                        .addGroup(principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(atirarTxt, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(principalLayout.createSequentialGroup()
-                                .addGap(50, 50, 50)
-                                .addComponent(portaavioesV)
-                                .addContainerGap(115, Short.MAX_VALUE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, principalLayout.createSequentialGroup()
-                                .addGroup(principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(iniciarBtn1)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, principalLayout.createSequentialGroup()
-                                        .addGap(8, 8, 8)
-                                        .addComponent(fragataH, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(fragataV))
-                                    .addGroup(principalLayout.createSequentialGroup()
-                                        .addGap(50, 50, 50)
-                                        .addComponent(cruzadorV)))
-                                .addGap(0, 0, Short.MAX_VALUE))))
+                                .addGap(20, 20, 20)
+                                .addComponent(fragataH, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(fragataV))
+                            .addGroup(principalLayout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addComponent(atirarBtn)))
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(principalLayout.createSequentialGroup()
                         .addGroup(principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(principalLayout.createSequentialGroup()
@@ -529,9 +641,15 @@ public class Tela extends javax.swing.JFrame {
                                                 .addComponent(cruzadorTxt)))
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addGroup(principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(portaavioesH)
-                                            .addComponent(cruzadorH))))))
-                        .addContainerGap(156, Short.MAX_VALUE))))
+                                            .addGroup(principalLayout.createSequentialGroup()
+                                                .addComponent(portaavioesH)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addComponent(portaavioesV))
+                                            .addGroup(principalLayout.createSequentialGroup()
+                                                .addComponent(cruzadorH)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addComponent(cruzadorV)))))))
+                        .addContainerGap(113, Short.MAX_VALUE))))
         );
         principalLayout.setVerticalGroup(
             principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -561,20 +679,17 @@ public class Tela extends javax.swing.JFrame {
                             .addComponent(fragataH)
                             .addComponent(fragataV))
                         .addGap(10, 10, 10)
-                        .addGroup(principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(principalLayout.createSequentialGroup()
-                                .addGroup(principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jLabel37)
-                                    .addComponent(cruzadorTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(10, 10, 10)
-                                .addGroup(principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jLabel35)
-                                    .addComponent(portaavioesTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(portaavioesH)
-                                    .addComponent(portaavioesV)))
-                            .addGroup(principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(cruzadorH)
-                                .addComponent(cruzadorV)))
+                        .addGroup(principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel37)
+                            .addComponent(cruzadorTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cruzadorH)
+                            .addComponent(cruzadorV))
+                        .addGap(10, 10, 10)
+                        .addGroup(principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel35)
+                            .addComponent(portaavioesTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(portaavioesH)
+                            .addComponent(portaavioesV))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(iniciarBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(principalLayout.createSequentialGroup()
@@ -590,7 +705,7 @@ public class Tela extends javax.swing.JFrame {
                         .addComponent(jLabel33))
                     .addGroup(principalLayout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jPanelIA, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jPanelP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 68, Short.MAX_VALUE)
                 .addGroup(principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, principalLayout.createSequentialGroup()
@@ -630,9 +745,9 @@ public class Tela extends javax.swing.JFrame {
                         .addGroup(principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(principalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                                 .addComponent(jLabel39)
-                                .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(iniciarBtn1))
-                            .addComponent(jPanelP, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(atirarTxt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(atirarBtn))
+                            .addComponent(jPanelIA, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(53, 53, 53))))
         );
 
@@ -756,6 +871,25 @@ public class Tela extends javax.swing.JFrame {
         portaavioesH.setSelected(false);
         orientacao = true;
     }//GEN-LAST:event_portaavioesVActionPerformed
+
+    private void atirarBtnMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_atirarBtnMouseClicked
+        tiro = atirarTxt.getText();
+
+        try {
+            if (tiro != null) {
+                atirarTxt.setText("");
+
+                if (!definirTiro(tiro)) {
+                    JOptionPane.showMessageDialog(null, "Você já atirou nessa posição. Escolha outra", "Erro", JOptionPane.ERROR_MESSAGE);
+                    definirTiro(tiro);
+                }
+            } else {
+                JOptionPane.showMessageDialog(this, "Defina uma posição do tabuleiro para atirar", "Erro", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (StringIndexOutOfBoundsException ex) {
+            JOptionPane.showMessageDialog(this, "Algo deu errado, tente novamente", "Erro", JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_atirarBtnMouseClicked
      
     public static void main(String args[]) {
         try {
@@ -819,9 +953,12 @@ public class Tela extends javax.swing.JFrame {
         }
     }
     
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel acertoIA;
     private javax.swing.JLabel acertoP;
+    private javax.swing.JButton atirarBtn;
+    private javax.swing.JTextField atirarTxt;
     private javax.swing.JRadioButton cruzadorH;
     private javax.swing.JTextField cruzadorTxt;
     private javax.swing.JRadioButton cruzadorV;
@@ -829,7 +966,6 @@ public class Tela extends javax.swing.JFrame {
     private javax.swing.JTextField fragataTxt;
     private javax.swing.JRadioButton fragataV;
     private javax.swing.JButton iniciarBtn;
-    private javax.swing.JButton iniciarBtn1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
@@ -873,10 +1009,11 @@ public class Tela extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanelIA;
     private javax.swing.JPanel jPanelP;
-    private javax.swing.JTextField jTextField1;
     private javax.swing.JRadioButton portaavioesH;
     private javax.swing.JTextField portaavioesTxt;
     private javax.swing.JRadioButton portaavioesV;
     private javax.swing.JPanel principal;
     // End of variables declaration//GEN-END:variables
+
+   
 }

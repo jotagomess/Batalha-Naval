@@ -1,6 +1,5 @@
 package batalhanaval.jogadores;
 
-import batalhanaval.Tabuleiro;
 import batalhanaval.navios.Navio;
 import java.util.Vector;
 import javax.swing.JOptionPane;
@@ -17,12 +16,17 @@ public class Jogador {
     public Jogador() {
         this.embarcacoes = new Navio[5][10];
     }
-
+    
+    public Navio[][] getEmbarcacoes() {
+        return embarcacoes;
+    }
+    
     public boolean adicionaEmbarcacoes(int linha, int coluna, Navio navio, boolean orientacao) {
         int tamanhoNavio = navio.getCelula();
         int linhaAtual = linha;
         int colunaAtual = coluna;
-
+        
+        try {
         if (verificarPosicaoOcupada(linhaAtual, colunaAtual)) {
             JOptionPane.showMessageDialog(null, "A posição escolhida está ocupada. Escolha outra posição.", "Posição Ocupada", JOptionPane.ERROR_MESSAGE);
             return false;
@@ -36,6 +40,10 @@ public class Jogador {
            
         adicionarNavio(linhaAtual, colunaAtual, navio, orientacao);
         return true;
+        } catch (ArrayIndexOutOfBoundsException ex) {
+            JOptionPane.showConfirmDialog(null, "A posição escolhida excede o tabuleiro.", "Posição Inválida", JOptionPane.YES_NO_OPTION);
+            return false;
+        }
     }
 
     private boolean verificarPosicaoOcupada(int linha, int coluna) {
@@ -101,8 +109,17 @@ public class Jogador {
         }
     }
 
-    public Navio[][] getEmbarcacoes() {
-        return embarcacoes;
+    public boolean recebeTiro(int linha, int coluna) {
+        if (this.embarcacoes[linha][coluna] != null) {
+            
+            this.embarcacoes[linha][coluna] = null; 
+            return true;
+        } else {
+            return false;
+        }
     }
-    
+
+    public boolean realizaTiro(int linha, int coluna, Maquina maquina) {
+        return maquina.recebeTiro(linha, coluna);
+    }
 }
